@@ -30,6 +30,16 @@ elif duration >= one_hour and duration < one_day:
     my_second = duration % one_minute
     print ('{} час {} мин {} сек'.format(my_hour,my_minute,my_second));
 
+#вывод в неделях:
+elif duration >= one_day and duration < one_week:
+    my_day = duration // one_day
+    duration=duration % one_day
+    my_hour = duration // one_hour
+    duration = duration % one_hour
+    my_minute = duration // one_minute
+    my_second = duration % one_minute
+    print('{} дн {} час {} мин {} сек'.format(my_day, my_hour, my_minute, my_second));
+
 #Задание №2
 # 1. Вычислить сумму тех чисел из этого списка, сумма цифр которых делится нацело на 7. Например, число «19 ^ 3 = 6859» будем включать в сумму, так как 6 + 8 + 5 + 9 = 28 – делится нацело на 7. Внимание: использовать только арифметические операции!
 #создать список кубов нечётных чисел от 1 до 1000
