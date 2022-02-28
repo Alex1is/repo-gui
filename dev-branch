@@ -1,1 +1,68 @@
-changes
+#1. Написать функцию num_translate(), переводящую числительные от 0 до 10 c английского на русский язык. Например:
+#>>> num_translate("one")
+#"один"
+#>>> num_translate("eight")
+#"восемь"
+#Если перевод сделать невозможно, вернуть None.
+# Подумайте, как и где лучше хранить информацию, необходимую для перевода: какой тип данных выбрать, в теле функции или снаружи.
+
+eng_rus_dict = {
+    'one': 'один',
+    'two': 'два',
+    'three': 'три',
+    'four': 'черыти',
+    'five': 'пять',
+    'six': 'шесть',
+    'seven': 'семь',
+    'eing': 'восемь',
+    'nine': 'девять',
+    'ten': 'десять'
+}
+def num_translate(end_word):
+    return eng_rus_dict.get(end_word)
+print(num_translate('ten'))
+
+#3. Написать функцию thesaurus(), принимающую в качестве аргументов имена сотрудников и возвращающую словарь,
+# в котором ключи — первые буквы имён, а значения — списки, содержащие имена, начинающиеся с соответствующей буквы.
+# Например:
+#>>>  thesaurus("Иван", "Мария", "Петр", "Илья")
+#{
+    #"И": ["Иван", "Илья"],
+    #"М": ["Мария"], "П": ["Петр"]
+#}
+
+def thesaurus(*names):
+    out_dict= dict()
+    print(out_dict)
+    for name in names:
+        out_dict.setdefault(name[0], [])
+        out_dict[name[0]].append(name)
+    return out_dict
+print(thesaurus("Иван", "Мария", "Петр", "Илья", 'Федор'))
+
+#5. Реализовать функцию get_jokes(), возвращающую n шуток,
+#сформированных из трех случайных слов, взятых из трёх списков (по одному из каждого):
+
+#Документировать код функции.
+#Сможете ли вы добавить еще один аргумент — флаг, разрешающий или запрещающий повторы слов в шутках
+#(когда каждое слово можно использовать только в одной шутке)? Сможете ли вы сделать аргументы именованными?
+
+
+import random
+
+nouns = ["автомобиль", "лес", "огонь", "город", "дом"]
+adverbs = ["сегодня", "вчера", "завтра", "позавчера", "ночью"]
+adjectives = ["веселый", "яркий", "зеленый", "утопичный", "мягкий"]
+
+ def get_jokes(num):
+     """Function to return jokes. num (int) - count of jokes """
+     joke_list = []
+     for i in range(num):
+         cur_nouns = random.choice(nouns)
+         cur_adverbs = random.choice(adverbs)
+         cur_adjectives = random.choice(adjectives)
+         joke_list.append(f'{cur_nouns} {cur_adverbs} {cur_adjectives}')
+     return joke_list
+
+ print(get_jokes(1))
+ print(get_jokes(2))
