@@ -29,6 +29,16 @@ elif duration >= one_hour and duration < one_day:
     my_minute = duration // one_minute
     my_second = duration % one_minute
     print ('{} час {} мин {} сек'.format(my_hour,my_minute,my_second));
+    
+#вывод в неделях:
+elif duration >= one_day and duration < one_week:
+    my_day = duration // one_day
+    duration=duration % one_day
+    my_hour = duration // one_hour
+    duration = duration % one_hour
+    my_minute = duration // one_minute
+    my_second = duration % one_minute
+    print('{} дн {} час {} мин {} сек'.format(my_day, my_hour, my_minute, my_second));    
 
 #вывод в неделях:
 elif duration >= one_day and duration < one_week:
