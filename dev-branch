@@ -1,88 +1,136 @@
-# Задание №1.
+#1. Не используя библиотеки для парсинга, распарсить (получить определённые данные)
+# файл логов web-сервера nginx_logs.txt
+#(https://github.com/elastic/examples/raw/master/Common%20Data%20Formats/nginx_logs/nginx_logs) — получить список кортежей вида:
+# (<remote_addr>, <request_type>, <requested_resource>).
+# Например:
 
-# 1 минута
-one_minute = 60
-# 1 час
-one_hour = 3600
-# 1 день
-one_day = 86400
-# 1 неделя
-one_week = 604800
+#[
+#...
+#('141.138.90.60', 'GET', '/downloads/product_2'),
+#('141.138.90.60', 'GET', '/downloads/product_2'),
+#('173.255.199.22', 'GET', '/downloads/product_2'),
+#...
+#]
 
-duration = int (input('Секунды: '))
+with open('nginx_logs.txt') as f:
+    data = []
+    for line in f:
+        splitted = line.split()
+        data.append((splitted[0], splitted[5].replace('"', ''), splitted[6]))
+print(data)
 
-#вывод в минутах:
+#2. * (вместо 1) Найти IP адрес спамера и количество отправленных им запросов по данным файла логов из предыдущего задания.
 
-if duration<one_minute:
-    print ('{} сек'.format(duration))
-#вывод в часах:
+with open('nginx_logs.txt') as f:
+    data = []
+    spam_dict = {}
+    for line in f:
+        splitted = line.split()
+        data.append((splitted[0], splitted[5].replace('"', ''), splitted[6]))
+        spam_dict.setdefault(splitted[0], 0)
+        spam_dict[splitted[0]] += 1
 
-elif one_minute <= duration and one_hour > duration:
-    my_minute=duration//one_minute
-    my_second=duration%one_minute
-    print ('{} мин {} сек'.format(my_minute,my_second));
+spam_dict = sorted(spam_dict.items(), key=lambda x: x[1], reverse=True)
+print(spam_dict[:5])
 
-#вывод в сутках:
-elif duration >= one_hour and duration < one_day:
-    my_hour=duration // one_hour
-    duration=duration % one_hour
-    my_minute = duration // one_minute
-    my_second = duration % one_minute
-    print ('{} час {} мин {} сек'.format(my_hour,my_minute,my_second));
+#3. Есть два файла: в одном хранятся ФИО пользователей сайта,
+# а в другом — данные об их хобби.
+# Известно, что при хранении данных используется принцип: одна строка — один пользователь,
+# разделитель между значениями — запятая.
+# Написать код, загружающий данные из обоих файлов и формирующий из них словарь: ключи — ФИО, значения — данные о хобби.
+# Сохранить словарь в файл. Проверить сохранённые данные.
+# Если в файле, хранящем данные о хобби, меньше записей, чем в файле с ФИО, задаём в словаре значение None.
+# Если наоборот — выходим из скрипта с кодом «1».
+# При решении задачи считать, что объём данных в файлах во много раз меньше объема ОЗУ.
+#Фрагмент файла с данными о пользователях (users.csv):
 
-#вывод в неделях:
-elif duration >= one_day and duration < one_week:
-    my_day = duration // one_day
-    duration=duration % one_day
-    my_hour = duration // one_hour
-    duration = duration % one_hour
-    my_minute = duration // one_minute
-    my_second = duration % one_minute
-    print('{} дн {} час {} мин {} сек'.format(my_day, my_hour, my_minute, my_second));
+#Иванов,Иван,Иванович
+#Петров,Петр,Петрович
 
-#Задание №2
-# 1. Вычислить сумму тех чисел из этого списка, сумма цифр которых делится нацело на 7. Например, число «19 ^ 3 = 6859» будем включать в сумму, так как 6 + 8 + 5 + 9 = 28 – делится нацело на 7. Внимание: использовать только арифметические операции!
-#создать список кубов нечётных чисел от 1 до 1000
+#Фрагмент файла с данными о хобби (hobby.csv):
 
-my_list = []
+#скалолазание,охота
+#горные лыжи
 
-for num in range(1,1001,2):
-    my_list.append(num ** 3)
+from itertools import zip_longest
+import json
 
-final_sum = 0
-print(len(my_list))
-#a
-for num in my_list:
-    check_sum = 0
-    for check_num in str(num):
-        check_sum += int(check_num)
-    if check_sum % 7 == 0:
-        final_sum += num
-print(final_sum)
-#b
-final_sum = 0
-for num in my_list:
-    num += 17
-    check_sum = 0
-    for check_num in str(num):
-        check_sum += int(check_num)
-    if check_sum % 7 == 0:
-        final_sum += num
-print(final_sum)
+out_dict = {}
+with open('users.csv', encoding='utf-8') as users:
+    with open('hobby.csv', encoding='utf-8') as hobby:
+        num_lines_users = sum(1 for line in users)
+        num_lines_hobby = sum(1 for line in hobby)
 
-#Задание №3.
+        if num_lines_users < num_lines_hobby:
+            exit(1)
 
-#Реализовать склонение слова «процент» во фразе «N процентов». Вывести эту фразу на экран отдельной строкой для каждого из чисел в интервале от 1 до 100:
+        users.seek(0)
+        hobby.seek(0)
+        for line_user, line_user_hobby in zip_longest(users, hobby):
+            out_dict[line_user.strip()] = line_user_hobby.strip() if \
+                line_user_hobby is not None else line_user_hobby
 
-for i in range(100):
-    new_str=str(i+1)
-    new_list = list(new_str)
-    if int(new_list[-1])==1 and i+1!=11:
-        print('{} процент'.format(i + 1))
-    elif int(new_list[-1])>1 and int(new_list[-1])<= 4:
-        if  i+1> 10 and i+1<= 14:
-            print('{} процентов'.format(i + 1))
-        else:
-            print('{} процента'.format(i + 1))
-    else:
-        print('{} процентов'.format(i + 1))
+with open('task3.json', 'w', encoding='utf-8') as f:
+    json.dump(out_dict, f, ensure_ascii=False)
+print(out_dict)
+
+#6. Реализовать простую систему хранения данных о суммах продаж булочной.
+# Должно быть два скрипта с интерфейсом командной строки: для записи данных и для вывода на экран записанных данных.
+# При записи передавать из командной строки значение суммы продаж.
+# Для чтения данных реализовать в командной строке следующую логику:
+#просто запуск скрипта — выводить все записи;
+#запуск скрипта с одним параметром-числом — выводить все записи с номера, равного этому числу, до конца;
+#запуск скрипта с двумя числами — выводить записи, начиная с номера, равного первому числу, по номер, равный второму числу,
+# включительно.
+#Подумать, как избежать чтения всего файла при реализации второго и третьего случаев.
+#Данные хранить в файле bakery.csv в кодировке utf-8. Нумерация записей начинается с 1. Примеры запуска скриптов:
+
+#python add_sale.py 5978,5
+#python add_sale.py 8914,3
+#python add_sale.py 7879,1
+#python add_sale.py 1573,7
+#python show_sales.py
+#5978,5
+#8914,3
+#7879,1
+#1573,7
+#python show_sales.py 3
+#7879,1
+#1573,7
+#python show_sales.py 1 3
+#5978,5
+#8914,3
+#7879,1
+
+ #add_sale.py
+ import sys
+
+ price = sys.argv[1]
+
+ with open('bakery.csv', 'a', encoding='utf-8') as f:
+     f.write(price + '\n')
+
+ #python add_sale.py 100
+
+
+ #show_sales.py
+ import sys
+
+ nums = sys.argv[1:]
+ with open('bakery.csv', encoding='utf-8') as f:
+     if len(nums) > 1:
+         start_idx = int(nums[0])
+         end_idx = int(nums[1])
+     elif len(nums) == 0:
+         start_idx = 0
+         end_idx = sum(1 for line in f)
+         f.seek(0)
+     else:
+         start_idx = int(nums[0])
+         end_idx = sum(1 for line in f)
+         f.seek(0)
+
+     for idx, line in enumerate(f):
+         if start_idx <= idx + 1 <= end_idx:
+             print(line.strip())
+
